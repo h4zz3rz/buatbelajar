@@ -2,153 +2,294 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Belajar JavaScript</title>
+  <title>Belajar JavaScript & HTML Interaktif</title>
   <style>
+    :root {
+      --bg: #f0f2f5;
+      --text: #333;
+      --card: #fff;
+      --code: #e9ecef;
+      --btn-bg: #007bff;
+      --btn-hover: #0056b3;
+      --output-bg: #2d2f33;
+      --output-text: #00ff88;
+    }
+    body.dark {
+      --bg: #181a1f;
+      --text: #eee;
+      --card: #20232a;
+      --code: #2c3036;
+      --btn-bg: #4a90e2;
+      --btn-hover: #357ab8;
+      --output-bg: #121417;
+      --output-text: #1affc9;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f9;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       padding: 20px;
+      line-height: 1.6;
+      transition: background 0.5s, color 0.5s;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeIn 0.6s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--btn-hover);
     }
     h2 {
-      margin-top: 30px;
+      color: var(--btn-bg);
+    }
+    .section {
+      background: var(--card);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.5s, color 0.5s;
+    }
+    pre.code {
+      background: var(--code);
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
     }
     button {
-      padding: 8px 16px;
-      margin: 5px 0;
+      padding: 10px 18px;
+      margin: 10px 5px 10px 0;
       border: none;
-      border-radius: 6px;
-      background: #007bff;
+      border-radius: 8px;
+      background: var(--btn-bg);
       color: white;
+      font-weight: 600;
       cursor: pointer;
+      transition: background 0.3s;
     }
     button:hover {
-      background: #0056b3;
+      background: var(--btn-hover);
     }
-    pre {
-      background: #222;
-      color: #0f0;
-      padding: 10px;
-      border-radius: 6px;
-      max-height: 200px;
+    pre.output {
+      background: var(--output-bg);
+      color: var(--output-text);
+      padding: 12px;
+      border-radius: 8px;
+      max-height: 220px;
       overflow-y: auto;
+      transition: background 0.5s, color 0.5s;
+    }
+    .topbar {
+      text-align: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Belajar JavaScript</h1>
-  <p>Klik tombol untuk jalankan bagian kodenya. Hasil muncul di bawah tombol.</p>
+  <div class="topbar">
+    <button onclick="toggleMode()">🌙/☀️ Mode</button>
+  </div>
 
-  <h2>1. Variabel</h2>
-  <button onclick="runVariabel()">Jalankan Variabel</button>
-  <pre id="out-variabel"></pre>
+  <h1>Belajar JavaScript & HTML Interaktif</h1>
+  <p style="text-align:center;">Klik <b>Jalankan</b> untuk lihat hasilnya 👇</p>
 
-  <h2>2. Operator</h2>
-  <button onclick="runOperator()">Jalankan Operator</button>
-  <pre id="out-operator"></pre>
+  <!-- Materi HTML Dasar -->
+  <div class="section">
+    <h2>0. HTML Dasar</h2>
+    <pre class="code">
+&lt;h1&gt;Judul&lt;/h1&gt;
+&lt;p&gt;Ini paragraf&lt;/p&gt;
+&lt;a href="https://google.com"&gt;Link Google&lt;/a&gt;
+&lt;img src="https://via.placeholder.com/150" alt="contoh"&gt;
+&lt;table border="1"&gt;
+  &lt;tr&gt;&lt;th&gt;Nama&lt;/th&gt;&lt;th&gt;Umur&lt;/th&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;Rixxe&lt;/td&gt;&lt;td&gt;20&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+    </pre>
+    <p><b>Contoh hasil langsung:</b></p>
+    <h3>Judul</h3>
+    <p>Ini paragraf</p>
+    <a href="https://google.com" target="_blank">Link Google</a><br>
+    <img src="https://via.placeholder.com/150" alt="contoh">
+    <table border="1" cellpadding="5" style="margin-top:10px;">
+      <tr><th>Nama</th><th>Umur</th></tr>
+      <tr><td>Rixxe</td><td>20</td></tr>
+    </table>
+  </div>
 
-  <h2>3. Kondisi</h2>
-  <button onclick="runKondisi()">Jalankan Kondisi</button>
-  <pre id="out-kondisi"></pre>
+  <!-- Variabel -->
+  <div class="section">
+    <h2>1. Variabel</h2>
+    <pre class="code">
+let nama = "Rixxe";    
+const umur = 20;       
+var kota = "Jakarta";  
 
-  <h2>4. Perulangan</h2>
-  <button onclick="runPerulangan()">Jalankan Perulangan</button>
-  <pre id="out-perulangan"></pre>
+console.log(nama, umur, kota);
+    </pre>
+    <button onclick="runVariabel()">Jalankan</button>
+    <pre class="output" id="out-variabel"></pre>
+  </div>
 
-  <h2>5. Function</h2>
-  <button onclick="runFunction()">Jalankan Function</button>
-  <pre id="out-function"></pre>
+  <!-- Operator -->
+  <div class="section">
+    <h2>2. Operator</h2>
+    <pre class="code">
+let x = 10, y = 3;
+console.log(x + y);
+console.log(x - y);
+console.log(x * y);
+console.log(x / y);
+console.log(x % y);
+console.log(x ** y);
+    </pre>
+    <button onclick="runOperator()">Jalankan</button>
+    <pre class="output" id="out-operator"></pre>
+  </div>
 
-  <h2>6. Promise</h2>
-  <button onclick="runPromise()">Jalankan Promise</button>
-  <pre id="out-promise"></pre>
+  <!-- Kondisi -->
+  <div class="section">
+    <h2>3. Kondisi</h2>
+    <pre class="code">
+let umur = 18;
+if (umur >= 18) console.log("dewasa");
+else console.log("bocil");
 
-  <h2>7. Async/Await (API Dummy)</h2>
-  <button onclick="runAsync()">Jalankan Async</button>
-  <pre id="out-async"></pre>
+let hasil = (umur >= 18) ? "dewasa" : "bocil";
+console.log(hasil);
+    </pre>
+    <button onclick="runKondisi()">Jalankan</button>
+    <pre class="output" id="out-kondisi"></pre>
+  </div>
 
+  <!-- Perulangan -->
+  <div class="section">
+    <h2>4. Perulangan</h2>
+    <pre class="code">
+// for
+for (let i = 0; i < 3; i++) console.log(i);
+
+// while
+let j = 0;
+while (j < 3) { console.log(j); j++; }
+    </pre>
+    <button onclick="runPerulangan()">Jalankan</button>
+    <pre class="output" id="out-perulangan"></pre>
+  </div>
+
+  <!-- Function -->
+  <div class="section">
+    <h2>5. Function</h2>
+    <pre class="code">
+function sapa(nama) {
+  return "Halo " + nama;
+}
+console.log(sapa("H4zz3r"));
+    </pre>
+    <button onclick="runFunction()">Jalankan</button>
+    <pre class="output" id="out-function"></pre>
+  </div>
+
+  <!-- Promise -->
+  <div class="section">
+    <h2>6. Promise</h2>
+    <pre class="code">
+let janji = new Promise((resolve, reject) => {
+  let sukses = true;
+  if (sukses) resolve("berhasil");
+  else reject("gagal");
+});
+
+janji.then(r => console.log(r))
+     .catch(e => console.log(e));
+    </pre>
+    <button onclick="runPromise()">Jalankan</button>
+    <pre class="output" id="out-promise"></pre>
+  </div>
+
+  <!-- Async Await -->
+  <div class="section">
+    <h2>7. Async / Await</h2>
+    <pre class="code">
+async function ambilData() {
+  let res = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+  let data = await res.json();
+  console.log(data);
+}
+ambilData();
+    </pre>
+    <button onclick="runAsync()">Jalankan</button>
+    <pre class="output" id="out-async"></pre>
+  </div>
+
+  <!-- Script Eksekusi -->
   <script>
-    // Utility buat print output ke <pre>
+    // Mode Terang/Gelap
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("modeGelap", document.body.classList.contains("dark"));
+    }
+    // Load preferensi
+    window.onload = () => {
+      if (localStorage.getItem("modeGelap") === "true") {
+        document.body.classList.add("dark");
+      }
+    };
+
     function print(id, ...args) {
       document.getElementById(id).textContent += args.join(" ") + "\n";
     }
+    function clearOut(id) {
+      document.getElementById(id).textContent = "";
+    }
 
-    // 1. Variabel
     function runVariabel() {
-      let out = document.getElementById("out-variabel");
-      out.textContent = ""; // reset
+      clearOut("out-variabel");
       let nama = "Rixxe";    
       const umur = 20;       
       var kota = "Jakarta";  
       print("out-variabel", nama, umur, kota);
     }
-
-    // 2. Operator
     function runOperator() {
-      let out = document.getElementById("out-operator");
-      out.textContent = "";
+      clearOut("out-operator");
       let x = 10, y = 3;
-      print("out-operator", "x+y =", x+y);
-      print("out-operator", "x-y =", x-y);
-      print("out-operator", "x*y =", x*y);
-      print("out-operator", "x/y =", x/y);
-      print("out-operator", "x%y =", x%y);
-      print("out-operator", "x**y =", x**y);
+      print("out-operator", x + y, x - y, x * y, x / y, x % y, x ** y);
     }
-
-    // 3. Kondisi
     function runKondisi() {
-      let out = document.getElementById("out-kondisi");
-      out.textContent = "";
+      clearOut("out-kondisi");
       let umur = 18;
-      if (umur >= 18) {
-        print("out-kondisi", "berjembt");
-      } else {
-        print("out-kondisi", "bocil");
-      }
-      let hasil = (umur >= 18) ? "berjmbt" : "bocil";
+      if (umur >= 18) print("out-kondisi", "dewasa");
+      else print("out-kondisi", "bocil");
+      let hasil = (umur >= 18) ? "dewasa" : "bocil";
       print("out-kondisi", hasil);
     }
-
-    // 4. Perulangan
     function runPerulangan() {
-      let out = document.getElementById("out-perulangan");
-      out.textContent = "";
-      for (let i = 0; i < 5; i++) print("out-perulangan", i);
+      clearOut("out-perulangan");
+      for (let i = 0; i < 3; i++) print("out-perulangan", i);
       let j = 0;
-      while (j < 5) { print("out-perulangan", j); j++; }
-      let angka = [1, 2, 3];
-      for (let a of angka) print("out-perulangan", a);
-      let orang = { nama: "Ani", umur: 20 };
-      for (let key in orang) print("out-perulangan", key, orang[key]);
+      while (j < 3) { print("out-perulangan", j); j++; }
     }
-
-    // 5. Function
     function runFunction() {
-      let out = document.getElementById("out-function");
-      out.textContent = "";
-      function sapa(nama) {
-        return "Halo " + nama;
-      }
+      clearOut("out-function");
+      function sapa(nama) { return "Halo " + nama; }
       print("out-function", sapa("H4zz3r"));
     }
-
-    // 6. Promise
     function runPromise() {
-      let out = document.getElementById("out-promise");
-      out.textContent = "";
+      clearOut("out-promise");
       let janji = new Promise((resolve, reject) => {
         let sukses = true;
-        if (sukses) resolve("boleh jg");
-        else reject("gagal, tolol sih");
+        if (sukses) resolve("berhasil");
+        else reject("gagal");
       });
-      janji.then(res => print("out-promise", res))
-           .catch(err => print("out-promise", err));
+      janji.then(r => print("out-promise", r))
+           .catch(e => print("out-promise", e));
     }
-
-    // 7. Async Await
     async function runAsync() {
-      let out = document.getElementById("out-async");
-      out.textContent = "";
+      clearOut("out-async");
       try {
         let res = await fetch("https://jsonplaceholder.typicode.com/posts/1");
         let data = await res.json();
