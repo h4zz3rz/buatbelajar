@@ -1,46 +1,231 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Unbanned MT</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unbanned MT - Dashboard</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #007BFF, #6C757D);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: #fff;
+      color: #333;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h2 { margin-bottom: 20px; color: #007BFF; }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+    textarea { resize: none; height: 100px; }
+    button {
+      width: 100%;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 12px;
+      font-size: 15px;
+    }
+    button:hover { background: #0056b3; }
+
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: #fff;
+      color: #333;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 12px;
+      width: 80%; max-width: 400px;
+      text-align: center;
+      animation: pop 0.3s ease;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover { color: #000; }
+    @keyframes pop { from{transform:scale(0.7);opacity:0;} to{transform:scale(1);opacity:1;} }
+
+    /* Dashboard */
+    #dashboard { display: none; }
+    #authForms { display: block; }
+  </style>
 </head>
 <body>
-  <h2>Login ke Unbanned MT</h2>
-  <form id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" required>
-    <input type="password" id="loginPassword" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
-  <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+  <div class="container">
+    <!-- AUTH FORM -->
+    <div id="authForms">
+      <h2>Login & Register</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+      <hr />
+      <form id="registerForm">
+        <input type="email" id="regEmail" placeholder="Email" required />
+        <input type="password" id="regPassword" placeholder="Password (min 6 char)" required />
+        <button type="submit">Register</button>
+      </form>
+    </div>
 
-  <div id="popup" class="popup"></div>
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+      <h2>Dashboard 🎉</h2>
+      <p id="userEmail">Kamu login sebagai: </p>
 
+      <!-- Form Request Unbanned -->
+      <form id="unbanForm">
+        <h3>Request Unbanned</h3>
+        <input type="text" id="username" placeholder="Username Game" required />
+        <textarea id="reason" placeholder="Alasan minta unban..." required></textarea>
+        <button type="submit">Kirim Request</button>
+      </form>
+      <button id="logoutBtn" style="background:#dc3545;">Logout</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="popup" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="popupMsg"></p>
+    </div>
+  </div>
+
+  <!-- Firebase & Script -->
   <script type="module">
-    import { auth } from "./firebase.js";
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } 
+      from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-    const loginForm = document.getElementById("loginForm");
+    // Config Firebase (punyamu)
+    const firebaseConfig = {
+      apiKey: "AIzaSyARnF7pHM9i2xmd2Dh68bVx8Bh9tCOah6I",
+      authDomain: "bisinis-unbaned-testing1.firebaseapp.com",
+      projectId: "bisinis-unbaned-testing1",
+      storageBucket: "bisinis-unbaned-testing1.appspot.com",
+      messagingSenderId: "161325332962",
+      appId: "1:161325332962:web:de5be6347fd8e36f12e1bb",
+      measurementId: "G-BSC9JH7NDY"
+    };
+
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // UI Elements
+    const authForms = document.getElementById("authForms");
+    const dashboard = document.getElementById("dashboard");
+    const userEmail = document.getElementById("userEmail");
     const popup = document.getElementById("popup");
+    const popupMsg = document.getElementById("popupMsg");
+    const closeBtn = document.querySelector(".close");
 
-    function showPopup(msg){
-      popup.innerText = msg;
+    function showPopup(msg) {
+      popupMsg.textContent = msg;
       popup.style.display = "block";
-      setTimeout(()=> popup.style.display="none", 3000);
     }
+    closeBtn.onclick = () => (popup.style.display = "none");
+    window.onclick = (e) => { if (e.target === popup) popup.style.display = "none"; };
 
-    loginForm.addEventListener("submit", (e)=>{
+    // Register
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = loginForm.loginEmail.value;
-      const pass = loginForm.loginPassword.value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        showPopup("Register sukses ✅");
+      } catch (err) {
+        showPopup("Error: " + err.message);
+      }
+    });
 
-      signInWithEmailAndPassword(auth, email, pass)
-        .then(()=> {
-          showPopup("✅ Login berhasil!");
-          setTimeout(()=> window.location.href="dashboard.html", 1500);
-        })
-        .catch(err=> showPopup("⚠️ "+err.message));
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showPopup("Login sukses 🎉");
+      } catch (err) {
+        showPopup("Error: " + err.message);
+      }
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      showPopup("Logout berhasil 🚪");
+    });
+
+    // Request Unbanned
+    document.getElementById("unbanForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const reason = document.getElementById("reason").value;
+      try {
+        await addDoc(collection(db, "unbanRequests"), {
+          username: username,
+          reason: reason,
+          email: auth.currentUser.email,
+          createdAt: serverTimestamp()
+        });
+        showPopup("Request Unbanned terkirim ✅");
+        e.target.reset();
+      } catch (err) {
+        showPopup("Error: " + err.message);
+      }
+    });
+
+    // Auth State
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authForms.style.display = "none";
+        dashboard.style.display = "block";
+        userEmail.textContent = "Kamu login sebagai: " + user.email;
+      } else {
+        authForms.style.display = "block";
+        dashboard.style.display = "none";
+      }
     });
   </script>
 </body>
