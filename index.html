@@ -3,154 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unbanned System - Dejz Dev</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Login & Register - Unbanned MT</title>
   <style>
-    :root {
-      --primary-blue: #007bff;
-      --secondary-gray: #6c757d;
-      --bg-light: #ffffff;
-      --bg-dark: #1e1e2e;
-      --text-light: #f8f9fa;
-      --text-dark: #212529;
-    }
-
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      transition: background 0.5s, color 0.5s;
+      background: linear-gradient(to right, #007BFF, #6C757D);
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+      transition: background 0.3s ease-in-out;
     }
 
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-light);
+    h2 {
+      margin-bottom: 20px;
     }
 
-    header {
-      background: var(--primary-blue);
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-
-    .brand {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-    }
-
-    .card {
-      background: var(--bg-light);
-      color: var(--text-dark);
+    form {
+      background: #fff;
+      color: #333;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-      transition: background 0.5s, color 0.5s;
-    }
-
-    body.dark .card {
-      background: #2c2c3a;
-      color: var(--text-light);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: inline-block;
+      min-width: 280px;
     }
 
     input {
-      width: 100%;
+      width: 90%;
       padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
+      margin: 10px 0;
       border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
     button {
-      width: 100%;
-      padding: 10px;
+      background: #007BFF;
+      color: #fff;
       border: none;
-      border-radius: 8px;
-      background: var(--primary-blue);
-      color: white;
-      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 6px;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     button:hover {
       background: #0056b3;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
+    /* Modal background */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 9999; 
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      transition: opacity 0.3s ease-in-out;
     }
 
-    li {
-      padding: 5px;
-      border-bottom: 1px solid #ddd;
+    /* Modal box */
+    .modal-content {
+      background: white;
+      color: #333;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 12px;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      animation: pop 0.3s ease;
+      text-align: center;
     }
 
-    .toggle-theme {
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
       cursor: pointer;
-      background: var(--secondary-gray);
-      padding: 6px 12px;
-      border-radius: 8px;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand"><i class="fas fa-database"></i> Dejz Dev</div>
-    <div class="toggle-theme" onclick="toggleTheme()">🌗</div>
-  </header>
 
-  <div class="container">
-    <!-- Login Section -->
-    <div id="loginSection" class="card">
-      <h2>Login</h2>
-      <input type="email" id="logEmail" placeholder="Email" />
-      <input type="password" id="logPass" placeholder="Password" />
-      <button onclick="loginUser()">Login</button>
-      <p>Belum punya akun? <a href="#" onclick="showRegister()">Register</a></p>
-    </div>
+  <h2>Login & Register - Unbanned MT</h2>
 
-    <!-- Register Section -->
-    <div id="registerSection" class="card" style="display:none;">
-      <h2>Register</h2>
-      <input type="email" id="regEmail" placeholder="Email" />
-      <input type="password" id="regPass" placeholder="Password" />
-      <button onclick="registerUser()">Register</button>
-      <p>Sudah punya akun? <a href="#" onclick="showLogin()">Login</a></p>
-    </div>
+  <!-- Login Form -->
+  <form id="loginForm">
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
+    <button type="submit">Login</button>
+  </form>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="card" style="display:none;">
-      <h2>Database Had3z</h2>
-      <button onclick="logoutUser()">Logout</button>
-      <hr>
-      <h3>Request Unbanned</h3>
-      <input type="text" id="userID" placeholder="Masukkan User ID" />
-      <button onclick="submitRequest()">Kirim Request</button>
-      <hr>
-      <h3>Riwayat Request</h3>
-      <ul id="history"></ul>
+  <br><br>
+
+  <!-- Register Form -->
+  <form id="registerForm">
+    <h3>Register</h3>
+    <input type="email" id="regEmail" placeholder="Email" required />
+    <input type="password" id="regPassword" placeholder="Password (min 6 char)" required />
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Modal Popup -->
+  <div id="popupModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="popupMessage">Isi pesan muncul disini...</p>
     </div>
   </div>
 
-  <!-- Firebase Script -->
   <script type="module">
+    // ================= Firebase Setup =================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } 
       from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs }
-      from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyARnF7pHM9i2xmd2Dh68bVx8Bh9tCOah6I",
@@ -162,88 +139,61 @@
       measurementId: "G-BSC9JH7NDY"
     };
 
-    // Init Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
 
-    // Show/hide sections
-    window.showRegister = () => {
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("registerSection").style.display = "block";
-    };
+    // ================= Popup Function =================
+    function showPopup(message) {
+      let modal = document.getElementById("popupModal");
+      let popupMsg = document.getElementById("popupMessage");
+      let span = document.querySelector(".close");
 
-    window.showLogin = () => {
-      document.getElementById("registerSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "block";
-    };
+      popupMsg.textContent = message;
+      modal.style.display = "block";
 
-    // Register
-    window.registerUser = async () => {
-      const email = document.getElementById("regEmail").value;
-      const password = document.getElementById("regPass").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("✅ Register sukses!");
-        showLogin();
-      } catch (err) {
-        alert(err.message);
+      span.onclick = function() {
+        modal.style.display = "none";
       }
-    };
 
-    // Login
-    window.loginUser = async () => {
-      const email = document.getElementById("logEmail").value;
-      const password = document.getElementById("logPass").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("✅ Login sukses!");
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-        loadRequests();
-      } catch (err) {
-        alert(err.message);
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
       }
-    };
-
-    // Logout
-    window.logoutUser = async () => {
-      await signOut(auth);
-      document.getElementById("dashboard").style.display = "none";
-      document.getElementById("loginSection").style.display = "block";
-    };
-
-    // Submit Request Unbanned
-    window.submitRequest = async () => {
-      const userID = document.getElementById("userID").value;
-      if (!userID) return alert("User ID wajib diisi!");
-      try {
-        await addDoc(collection(db, "requests"), {
-          userID: userID,
-          time: new Date().toISOString()
-        });
-        alert("📨 Request berhasil dikirim!");
-        loadRequests();
-      } catch (err) {
-        alert(err.message);
-      }
-    };
-
-    // Load Request History
-    async function loadRequests() {
-      const querySnapshot = await getDocs(collection(db, "requests"));
-      const history = document.getElementById("history");
-      history.innerHTML = "";
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        history.innerHTML += `<li>${data.userID} - ${data.time}</li>`;
-      });
     }
 
-    // Theme toggle
-    window.toggleTheme = () => {
-      document.body.classList.toggle("dark");
-    };
+    // ================= Login =================
+    const loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          showPopup("✅ Login berhasil! Selamat datang " + email);
+        })
+        .catch(error => {
+          showPopup("⚠️ " + error.message);
+        });
+    });
+
+    // ================= Register =================
+    const registerForm = document.getElementById("registerForm");
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          showPopup("🎉 Registrasi berhasil! Akun dibuat: " + email);
+        })
+        .catch(error => {
+          showPopup("⚠️ " + error.message);
+        });
+    });
   </script>
+
 </body>
 </html>
