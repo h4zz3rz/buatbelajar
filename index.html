@@ -3,197 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login & Register - Unbanned MT</title>
+  <title>Login - Unbanned MT</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #007BFF, #6C757D);
-      color: #fff;
-      text-align: center;
-      padding: 50px;
-      transition: background 0.3s ease-in-out;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    form {
-      background: #fff;
-      color: #333;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      display: inline-block;
-      min-width: 280px;
-    }
-
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    button {
-      background: #007BFF;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    /* Modal background */
-    .modal {
-      display: none; 
-      position: fixed; 
-      z-index: 9999; 
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.6);
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    /* Modal box */
-    .modal-content {
-      background: white;
-      color: #333;
-      margin: 15% auto;
-      padding: 20px;
-      border-radius: 12px;
-      width: 80%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      animation: pop 0.3s ease;
-      text-align: center;
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .close:hover {
-      color: #000;
-    }
-
-    @keyframes pop {
-      from { transform: scale(0.7); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+    body { font-family: Arial, sans-serif; background: linear-gradient(to right, #007BFF, #6C757D); text-align:center; padding:60px; color:white;}
+    form { background:white; color:#333; padding:20px; border-radius:12px; display:inline-block; box-shadow:0 10px 25px rgba(0,0,0,0.2);}
+    input,button{margin:10px 0;padding:10px;width:90%;border-radius:6px;border:1px solid #ccc;}
+    button{background:#007BFF;color:white;cursor:pointer;}
+    button:hover{background:#0056b3;}
   </style>
 </head>
 <body>
-
-  <h2>Login & Register - Unbanned MT</h2>
-
-  <!-- Login Form -->
+  <h2>Login ke Dashboard</h2>
   <form id="loginForm">
-    <h3>Login</h3>
     <input type="email" id="loginEmail" placeholder="Email" required />
     <input type="password" id="loginPassword" placeholder="Password" required />
     <button type="submit">Login</button>
   </form>
-
-  <br><br>
-
-  <!-- Register Form -->
-  <form id="registerForm">
-    <h3>Register</h3>
-    <input type="email" id="regEmail" placeholder="Email" required />
-    <input type="password" id="regPassword" placeholder="Password (min 6 char)" required />
-    <button type="submit">Register</button>
-  </form>
-
-  <!-- Modal Popup -->
-  <div id="popupModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <p id="popupMessage">Isi pesan muncul disini...</p>
-    </div>
-  </div>
+  <p>Belum punya akun? <a href="register.html" style="color:#FFD700;">Daftar disini</a></p>
 
   <script type="module">
-    // ================= Firebase Setup =================
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } 
-      from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { auth } from "./firebase.js";
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyARnF7pHM9i2xmd2Dh68bVx8Bh9tCOah6I",
-      authDomain: "bisinis-unbaned-testing1.firebaseapp.com",
-      projectId: "bisinis-unbaned-testing1",
-      storageBucket: "bisinis-unbaned-testing1.firebasestorage.app",
-      messagingSenderId: "161325332962",
-      appId: "1:161325332962:web:de5be6347fd8e36f12e1bb",
-      measurementId: "G-BSC9JH7NDY"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // ================= Popup Function =================
-    function showPopup(message) {
-      let modal = document.getElementById("popupModal");
-      let popupMsg = document.getElementById("popupMessage");
-      let span = document.querySelector(".close");
-
-      popupMsg.textContent = message;
-      modal.style.display = "block";
-
-      span.onclick = function() {
-        modal.style.display = "none";
-      }
-
-      window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      }
-    }
-
-    // ================= Login =================
-    const loginForm = document.getElementById("loginForm");
-    loginForm.addEventListener("submit", (e) => {
+    document.getElementById("loginForm").addEventListener("submit", async(e)=>{
       e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          showPopup("✅ Login berhasil! Selamat datang " + email);
-        })
-        .catch(error => {
-          showPopup("⚠️ " + error.message);
-        });
-    });
-
-    // ================= Register =================
-    const registerForm = document.getElementById("registerForm");
-    registerForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("regEmail").value;
-      const password = document.getElementById("regPassword").value;
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          showPopup("🎉 Registrasi berhasil! Akun dibuat: " + email);
-        })
-        .catch(error => {
-          showPopup("⚠️ " + error.message);
-        });
+      const email=document.getElementById("loginEmail").value;
+      const pass=document.getElementById("loginPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth,email,pass);
+        window.location.href="dashboard.html";
+      } catch(err) {
+        alert("⚠️ "+err.message);
+      }
     });
   </script>
-
 </body>
 </html>
