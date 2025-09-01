@@ -4,38 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - Unbanned MT</title>
-  <style>
-    body{font-family:Arial;background:linear-gradient(to right,#28a745,#6C757D);text-align:center;padding:60px;color:white;}
-    form{background:white;color:#333;padding:20px;border-radius:12px;display:inline-block;box-shadow:0 10px 25px rgba(0,0,0,0.2);}
-    input,button{margin:10px 0;padding:10px;width:90%;border-radius:6px;border:1px solid #ccc;}
-    button{background:#28a745;color:white;cursor:pointer;}
-    button:hover{background:#1e7e34;}
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Buat Akun Baru</h2>
+  <h2>Register Akun Baru</h2>
   <form id="registerForm">
-    <input type="email" id="regEmail" placeholder="Email" required />
-    <input type="password" id="regPassword" placeholder="Password (min 6 char)" required />
+    <input type="email" id="regEmail" placeholder="Email" required>
+    <input type="password" id="regPassword" placeholder="Password (min 6)" required>
     <button type="submit">Daftar</button>
   </form>
-  <p>Sudah punya akun? <a href="index.html" style="color:#FFD700;">Login disini</a></p>
+  <p>Sudah punya akun? <a href="index.html">Login di sini</a></p>
+
+  <div id="popup" class="popup"></div>
 
   <script type="module">
     import { auth } from "./firebase.js";
     import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-    document.getElementById("registerForm").addEventListener("submit", async(e)=>{
+    const form = document.getElementById("registerForm");
+    const popup = document.getElementById("popup");
+
+    function showPopup(msg){
+      popup.innerText = msg;
+      popup.style.display = "block";
+      setTimeout(()=> popup.style.display="none", 3000);
+    }
+
+    form.addEventListener("submit", (e)=>{
       e.preventDefault();
-      const email=document.getElementById("regEmail").value;
-      const pass=document.getElementById("regPassword").value;
-      try {
-        await createUserWithEmailAndPassword(auth,email,pass);
-        alert("🎉 Registrasi berhasil! Silakan login.");
-        window.location.href="index.html";
-      } catch(err) {
-        alert("⚠️ "+err.message);
-      }
+      const email = form.regEmail.value;
+      const pass = form.regPassword.value;
+
+      createUserWithEmailAndPassword(auth, email, pass)
+        .then(()=> {
+          showPopup("🎉 Akun berhasil dibuat!");
+          setTimeout(()=> window.location.href="index.html", 2000);
+        })
+        .catch(err=> showPopup("⚠️ "+err.message));
     });
   </script>
 </body>
