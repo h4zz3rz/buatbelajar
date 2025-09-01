@@ -1,153 +1,249 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Unbanned & Login Page</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unbanned System - Dejz Dev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     :root {
-      --primary: #007bff;
-      --secondary: #6c757d;
-      --bg-light: #f4f4f9;
-      --bg-dark: #1e1e2f;
-      --text-light: #333;
-      --text-dark: #f4f4f9;
+      --primary-blue: #007bff;
+      --secondary-gray: #6c757d;
+      --bg-light: #ffffff;
+      --bg-dark: #1e1e2e;
+      --text-light: #f8f9fa;
+      --text-dark: #212529;
     }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: var(--bg-light);
-      color: var(--text-light);
+      color: var(--text-dark);
       transition: background 0.5s, color 0.5s;
     }
 
-    .dark-mode {
+    body.dark {
       background: var(--bg-dark);
-      color: var(--text-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      background: var(--primary-blue);
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
     }
 
     .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      transition: opacity 0.5s ease;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
     }
 
     .card {
-      background: white;
-      padding: 30px;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      width: 320px;
-      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
       transition: background 0.5s, color 0.5s;
     }
 
-    .dark-mode .card {
-      background: #2c2c3e;
-      color: var(--text-dark);
+    body.dark .card {
+      background: #2c2c3a;
+      color: var(--text-light);
     }
 
     input {
-      width: 90%;
+      width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin: 8px 0;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 6px;
     }
 
     button {
-      padding: 10px 20px;
-      margin: 10px 0;
+      width: 100%;
+      padding: 10px;
       border: none;
-      border-radius: 6px;
-      background: var(--primary);
+      border-radius: 8px;
+      background: var(--primary-blue);
       color: white;
+      font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
+      margin-top: 8px;
     }
 
     button:hover {
       background: #0056b3;
     }
 
-    .hidden {
-      display: none;
+    ul {
+      list-style: none;
+      padding: 0;
     }
 
-    .toggle-mode {
-      margin-top: 15px;
-      font-size: 14px;
-      color: var(--secondary);
+    li {
+      padding: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .toggle-theme {
       cursor: pointer;
+      background: var(--secondary-gray);
+      padding: 6px 12px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-  <!-- LOGIN PAGE -->
-  <div class="container" id="loginPage">
-    <div class="card">
+  <header>
+    <div class="brand"><i class="fas fa-database"></i> Dejz Dev</div>
+    <div class="toggle-theme" onclick="toggleTheme()">🌗</div>
+  </header>
+
+  <div class="container">
+    <!-- Login Section -->
+    <div id="loginSection" class="card">
       <h2>Login</h2>
-      <input type="text" id="username" placeholder="Username">
-      <input type="password" id="password" placeholder="Password">
-      <button onclick="login()">Masuk</button>
-      <div class="toggle-mode" onclick="toggleMode()">🌙 Ganti Mode</div>
-      <p id="loginError" style="color:red;"></p>
+      <input type="email" id="logEmail" placeholder="Email" />
+      <input type="password" id="logPass" placeholder="Password" />
+      <button onclick="loginUser()">Login</button>
+      <p>Belum punya akun? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+
+    <!-- Register Section -->
+    <div id="registerSection" class="card" style="display:none;">
+      <h2>Register</h2>
+      <input type="email" id="regEmail" placeholder="Email" />
+      <input type="password" id="regPass" placeholder="Password" />
+      <button onclick="registerUser()">Register</button>
+      <p>Sudah punya akun? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="card" style="display:none;">
+      <h2>Database Had3z</h2>
+      <button onclick="logoutUser()">Logout</button>
+      <hr>
+      <h3>Request Unbanned</h3>
+      <input type="text" id="userID" placeholder="Masukkan User ID" />
+      <button onclick="submitRequest()">Kirim Request</button>
+      <hr>
+      <h3>Riwayat Request</h3>
+      <ul id="history"></ul>
     </div>
   </div>
 
-  <!-- UNBANNED DASHBOARD -->
-  <div class="container hidden" id="dashboardPage">
-    <div class="card">
-      <h2>Request Unbanned</h2>
-      <p>Masukkan ID akun kamu untuk request unbanned</p>
-      <input type="text" id="userID" placeholder="Masukkan ID akun">
-      <button onclick="submitUnbanned()">Kirim Request</button>
-      <p id="result"></p>
-      <div class="toggle-mode" onclick="toggleMode()">🌙 Ganti Mode</div>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+      from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs }
+      from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-  <script>
-    // Mode Terang/Gelap
-    function toggleMode() {
-      document.body.classList.toggle("dark-mode");
-    }
+    const firebaseConfig = {
+      apiKey: "AIzaSyARnF7pHM9i2xmd2Dh68bVx8Bh9tCOah6I",
+      authDomain: "bisinis-unbaned-testing1.firebaseapp.com",
+      projectId: "bisinis-unbaned-testing1",
+      storageBucket: "bisinis-unbaned-testing1.firebasestorage.app",
+      messagingSenderId: "161325332962",
+      appId: "1:161325332962:web:de5be6347fd8e36f12e1bb",
+      measurementId: "G-BSC9JH7NDY"
+    };
 
-    // Simulasi Login
-    function login() {
-      let user = document.getElementById("username").value;
-      let pass = document.getElementById("password").value;
-      let error = document.getElementById("loginError");
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-      if (user === "admin" && pass === "1234") {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("dashboardPage").classList.remove("hidden");
-      } else {
-        error.textContent = "Username atau Password salah!";
+    // Show/hide sections
+    window.showRegister = () => {
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("registerSection").style.display = "block";
+    };
+
+    window.showLogin = () => {
+      document.getElementById("registerSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "block";
+    };
+
+    // Register
+    window.registerUser = async () => {
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPass").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("✅ Register sukses!");
+        showLogin();
+      } catch (err) {
+        alert(err.message);
       }
-    }
+    };
+
+    // Login
+    window.loginUser = async () => {
+      const email = document.getElementById("logEmail").value;
+      const password = document.getElementById("logPass").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("✅ Login sukses!");
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        loadRequests();
+      } catch (err) {
+        alert(err.message);
+      }
+    };
 
     // Logout
-    function logout() {
-      document.getElementById("dashboardPage").classList.add("hidden");
-      document.getElementById("loginPage").classList.remove("hidden");
-    }
+    window.logoutUser = async () => {
+      await signOut(auth);
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("loginSection").style.display = "block";
+    };
 
     // Submit Request Unbanned
-    function submitUnbanned() {
-      let id = document.getElementById("userID").value;
-      let result = document.getElementById("result");
-      if (id.trim() === "") {
-        result.style.color = "red";
-        result.textContent = "ID tidak boleh kosong!";
-      } else {
-        result.style.color = "green";
-        result.textContent = "Request unbanned untuk ID " + id + " telah dikirim!";
+    window.submitRequest = async () => {
+      const userID = document.getElementById("userID").value;
+      if (!userID) return alert("User ID wajib diisi!");
+      try {
+        await addDoc(collection(db, "requests"), {
+          userID: userID,
+          time: new Date().toISOString()
+        });
+        alert("📨 Request berhasil dikirim!");
+        loadRequests();
+      } catch (err) {
+        alert(err.message);
       }
+    };
+
+    // Load Request History
+    async function loadRequests() {
+      const querySnapshot = await getDocs(collection(db, "requests"));
+      const history = document.getElementById("history");
+      history.innerHTML = "";
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        history.innerHTML += `<li>${data.userID} - ${data.time}</li>`;
+      });
     }
+
+    // Theme toggle
+    window.toggleTheme = () => {
+      document.body.classList.toggle("dark");
+    };
   </script>
 </body>
 </html>
