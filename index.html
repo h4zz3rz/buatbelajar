@@ -3,125 +3,160 @@
 <head>
   <meta charset="UTF-8">
   <title>Belajar JavaScript</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+    button {
+      padding: 8px 16px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body>
-  <h2>Cek console (F12 → Console)</h2>
+  <h1>Belajar JavaScript</h1>
+  <p>Klik tombol untuk jalankan bagian kodenya. Hasil muncul di bawah tombol.</p>
 
-  <!-- Internal Script -->
+  <h2>1. Variabel</h2>
+  <button onclick="runVariabel()">Jalankan Variabel</button>
+  <pre id="out-variabel"></pre>
+
+  <h2>2. Operator</h2>
+  <button onclick="runOperator()">Jalankan Operator</button>
+  <pre id="out-operator"></pre>
+
+  <h2>3. Kondisi</h2>
+  <button onclick="runKondisi()">Jalankan Kondisi</button>
+  <pre id="out-kondisi"></pre>
+
+  <h2>4. Perulangan</h2>
+  <button onclick="runPerulangan()">Jalankan Perulangan</button>
+  <pre id="out-perulangan"></pre>
+
+  <h2>5. Function</h2>
+  <button onclick="runFunction()">Jalankan Function</button>
+  <pre id="out-function"></pre>
+
+  <h2>6. Promise</h2>
+  <button onclick="runPromise()">Jalankan Promise</button>
+  <pre id="out-promise"></pre>
+
+  <h2>7. Async/Await (API Dummy)</h2>
+  <button onclick="runAsync()">Jalankan Async</button>
+  <pre id="out-async"></pre>
+
   <script>
-    console.log("Hello World"); 
-    // Output: Hello World
-
-    // Variabel
-    let nama = "Rixxe";    
-    const umur = 20;       
-    var kota = "Jakarta";  
-
-    console.log(nama);   // Output: Rixxe
-    console.log(umur);   // Output: 20
-    console.log(kota);   // Output: Jakarta
-
-    // Tipe Data
-    let teks = "Halo";            
-    let angka = 123;              
-    let benar = true;             
-    let kosong = null;            
-    let tidakAda;                 
-    let orang = { nama: "Budi", umur: 21 }; 
-    let list = [1, 2, 3];         
-
-    console.log(teks);     // Output: Halo
-    console.log(angka);    // Output: 123
-    console.log(benar);    // Output: true
-    console.log(kosong);   // Output: null
-    console.log(tidakAda); // Output: undefined
-    console.log(orang);    // Output: { nama: "Budi", umur: 21 }
-    console.log(list);     // Output: [1, 2, 3]
-
-    // Operator
-    let x = 10;
-    let y = 3;
-    console.log(x + y);  // Output: 13
-    console.log(x - y);  // Output: 7
-    console.log(x * y);  // Output: 30
-    console.log(x / y);  // Output: 3.333...
-    console.log(x % y);  // Output: 1
-    console.log(x ** y); // Output: 1000
-
-    // Kondisi
-    let umur2 = 18;
-    if (umur2 >= 18) {
-      console.log("berjembt"); // Output: berjembt
-    } else {
-      console.log("bocil");
-    }
-    let hasil = (umur2 >= 18) ? "berjmbt" : "bocil";
-    console.log(hasil); // Output: berjmbt
-
-    // Perulangan
-    for (let i = 0; i < 5; i++) {
-      console.log(i);
-      // Output: 0 1 2 3 4
+    // Utility buat print output ke <pre>
+    function print(id, ...args) {
+      document.getElementById(id).textContent += args.join(" ") + "\n";
     }
 
-    let j = 0;
-    while (j < 5) {
-      console.log(j);
-      j++;
-      // Output: 0 1 2 3 4
+    // 1. Variabel
+    function runVariabel() {
+      let out = document.getElementById("out-variabel");
+      out.textContent = ""; // reset
+      let nama = "Rixxe";    
+      const umur = 20;       
+      var kota = "Jakarta";  
+      print("out-variabel", nama, umur, kota);
     }
 
-    let angka2 = [1, 2, 3];
-    for (let a of angka2) {
-      console.log(a);
-      // Output: 1 2 3
+    // 2. Operator
+    function runOperator() {
+      let out = document.getElementById("out-operator");
+      out.textContent = "";
+      let x = 10, y = 3;
+      print("out-operator", "x+y =", x+y);
+      print("out-operator", "x-y =", x-y);
+      print("out-operator", "x*y =", x*y);
+      print("out-operator", "x/y =", x/y);
+      print("out-operator", "x%y =", x%y);
+      print("out-operator", "x**y =", x**y);
     }
 
-    let orang2 = { nama: "Ani", umur: 20 };
-    for (let key in orang2) {
-      console.log(key, orang2[key]);
-      // Output:
-      // nama Ani
-      // umur 20
+    // 3. Kondisi
+    function runKondisi() {
+      let out = document.getElementById("out-kondisi");
+      out.textContent = "";
+      let umur = 18;
+      if (umur >= 18) {
+        print("out-kondisi", "berjembt");
+      } else {
+        print("out-kondisi", "bocil");
+      }
+      let hasil = (umur >= 18) ? "berjmbt" : "bocil";
+      print("out-kondisi", hasil);
     }
 
-    // Function
-    function sapa(nama) {
-      return "Halo " + nama;
+    // 4. Perulangan
+    function runPerulangan() {
+      let out = document.getElementById("out-perulangan");
+      out.textContent = "";
+      for (let i = 0; i < 5; i++) print("out-perulangan", i);
+      let j = 0;
+      while (j < 5) { print("out-perulangan", j); j++; }
+      let angka = [1, 2, 3];
+      for (let a of angka) print("out-perulangan", a);
+      let orang = { nama: "Ani", umur: 20 };
+      for (let key in orang) print("out-perulangan", key, orang[key]);
     }
-    console.log(sapa("H4zz3r")); 
-    // Output: Halo H4zz3r
 
-    // Promise
-    let janji = new Promise((resolve, reject) => {
-      let sukses = true;
-      if (sukses) resolve("boleh jg");
-      else reject("gagal, tolol sih");
-    });
+    // 5. Function
+    function runFunction() {
+      let out = document.getElementById("out-function");
+      out.textContent = "";
+      function sapa(nama) {
+        return "Halo " + nama;
+      }
+      print("out-function", sapa("H4zz3r"));
+    }
 
-    janji
-      .then(res => console.log(res))   // Output: boleh jg
-      .catch(err => console.log(err));
+    // 6. Promise
+    function runPromise() {
+      let out = document.getElementById("out-promise");
+      out.textContent = "";
+      let janji = new Promise((resolve, reject) => {
+        let sukses = true;
+        if (sukses) resolve("boleh jg");
+        else reject("gagal, tolol sih");
+      });
+      janji.then(res => print("out-promise", res))
+           .catch(err => print("out-promise", err));
+    }
 
-    // Async Await
-    async function ambilData() {
+    // 7. Async Await
+    async function runAsync() {
+      let out = document.getElementById("out-async");
+      out.textContent = "";
       try {
-        let res = await fetch("https://jsonplaceholder.typicode.com/posts/1"); 
+        let res = await fetch("https://jsonplaceholder.typicode.com/posts/1");
         let data = await res.json();
-        console.log(data);
-        // Output contoh:
-        // {
-        //   userId: 1,
-        //   id: 1,
-        //   title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-        //   body: "quia et suscipit..."
-        // }
+        print("out-async", JSON.stringify(data, null, 2));
       } catch (err) {
-        console.log("Error fetch:", err);
+        print("out-async", "Error:", err);
       }
     }
-    ambilData();
-
   </script>
 </body>
 </html>
